@@ -70,3 +70,15 @@ export function parseEnvContent(content: string, filePath: string = '<inline>'):
 
   return { entries, errors };
 }
+
+/**
+ * Converts a ParseResult's entries into a plain key-value record.
+ * Duplicate keys are overwritten by the last occurrence, matching
+ * the behaviour of most dotenv loaders.
+ */
+export function entriesToRecord(entries: EnvEntry[]): Record<string, string> {
+  return entries.reduce<Record<string, string>>((acc, entry) => {
+    acc[entry.key] = entry.value;
+    return acc;
+  }, {});
+}
