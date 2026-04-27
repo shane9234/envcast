@@ -46,6 +46,11 @@ describe('lintField', () => {
     const issues = lintField('MY_VAR_2', { type: 'string', description: 'A var', required: false });
     expect(issues.some((i) => i.message.includes('SCREAMING_SNAKE_CASE'))).toBe(false);
   });
+
+  it('returns no issues for a fully valid field', () => {
+    const issues = lintField('MY_VAR', { type: 'string', description: 'A var', required: false });
+    expect(issues).toHaveLength(0);
+  });
 });
 
 describe('lintSchema', () => {
@@ -74,5 +79,13 @@ describe('lintSchema', () => {
     };
     const result = lintSchema(schema);
     expect(result.issues.length).toBeGreaterThan(1);
+  });
+
+  it('returns an empty issues array for a clean schema', () => {
+    const schema: EnvSchema = {
+      API_KEY: { type: 'string', description: 'API key', required: true },
+    };
+    const result = lintSchema(schema);
+    expect(result.issues).toHaveLength(0);
   });
 });
