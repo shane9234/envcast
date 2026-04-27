@@ -52,6 +52,24 @@ export function validateEnv(
   return { valid: errors.length === 0, errors, missing, extra };
 }
 
+/**
+ * Formats a ValidationResult into a human-readable string summary.
+ * Useful for logging or throwing descriptive errors on startup.
+ */
+export function formatValidationResult(result: ValidationResult): string {
+  if (result.valid) {
+    return 'Environment validation passed.';
+  }
+  const lines: string[] = ['Environment validation failed:'];
+  for (const error of result.errors) {
+    lines.push(`  - [${error.variable}] ${error.message}`);
+  }
+  if (result.extra.length > 0) {
+    lines.push(`  Unexpected variables: ${result.extra.join(', ')}`);
+  }
+  return lines.join('\n');
+}
+
 function validateType(
   key: string,
   value: string,
