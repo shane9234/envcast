@@ -36,6 +36,8 @@ export interface ValidationResult {
 export interface ValidationError {
   variable: string;
   message: string;
+  /** The type that was expected for this variable */
+  expectedType?: EnvVarType;
   file?: string;
 }
 
@@ -44,3 +46,14 @@ export interface ValidationWarning {
   message: string;
   file?: string;
 }
+
+/**
+ * A parsed and validated environment variable value, typed according to its schema.
+ * - `string` and `url` and `email` types resolve to `string`
+ * - `number` and `port` types resolve to `number`
+ * - `boolean` type resolves to `boolean`
+ */
+export type ParsedEnvValue<T extends EnvVarType> =
+  T extends 'number' | 'port' ? number :
+  T extends 'boolean' ? boolean :
+  string;
